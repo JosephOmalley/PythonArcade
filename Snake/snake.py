@@ -6,7 +6,7 @@ pygame.init()
 
 
 
-color = (0,255,255)
+color = (0,0,0)
 clock = pygame.time.Clock()
 (CELL_SIZE, CELL_QTY) = (40, 20)
 surface = pygame.display.set_mode((CELL_SIZE * CELL_QTY, CELL_SIZE * CELL_QTY))
@@ -29,18 +29,26 @@ class SNAKE:
         self.x = 0
         self.y = 0
         self.pos = Vector2(self.x, self.y)
+        
 
     def spawn_snake(self):
-        snake_rect = pygame.Rect(self.pos.x * CELL_SIZE, self.pos.y * CELL_SIZE, CELL_SIZE, CELL_SIZE)
-        pygame.draw.rect(surface, (0,255,0), snake_rect)
+
+            snake_rect = pygame.Rect(self.pos.x * CELL_SIZE, self.pos.y * CELL_SIZE, CELL_SIZE, CELL_SIZE)
+            pygame.draw.rect(surface, (0,255,0), snake_rect)
+
+    def move_snake(self, x, y):
+        if 0 <= self.pos.x + x <= 19 and 0 <= self.pos.y + y <= 19:
+            snake.pos += Vector2(x, y)
+            
+        else: 
+            print("OUT OF BOUNDS")
+        print(self.pos.y + y)
+    
 
 
-
-
-
-
-
-
+    
+    
+    
 fruit = FRUIT()
 snake = SNAKE()
 pygame.display.set_caption("Python Snake")
@@ -56,16 +64,16 @@ while on:
             print("key")
             if e.key == pygame.K_w:
                 print("trying to go up")
-                snake.pos += Vector2(0, -1)   
+                snake.move_snake(0, -1)  
             if e.key == pygame.K_s:
                 print("trying to go down")
-                snake.pos += Vector2(0, 1)   
+                snake.move_snake(0, 1) 
             if e.key == pygame.K_a:
                 print("trying to go left")
-                snake.pos += Vector2(-1, 0)   
+                snake.move_snake(-1, 0) 
             if e.key == pygame.K_d:
                 print("trying to go right")
-                snake.pos += Vector2(1, 0)    
+                snake.move_snake(1, 0)   
     surface.fill(color)
     fruit.draw_fruit()
     snake.spawn_snake()
