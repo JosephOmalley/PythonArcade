@@ -15,8 +15,8 @@ surface = pygame.display.set_mode((CELL_SIZE * CELL_QTY, CELL_SIZE * CELL_QTY))
 on = True
 class FRUIT:
     def __init__(self):
-        self.x = random.randint(1, 20)
-        self.y = random.randint(1, 20)
+        self.x = random.randint(0, 19)
+        self.y = random.randint(0, 19)
         self.pos = Vector2(self.x, self.y)
 
     def draw_fruit(self):
@@ -26,30 +26,37 @@ class FRUIT:
 
 class SNAKE:
     def __init__(self):
-        self.x = 0
-        self.y = 0
-        self.pos = Vector2(self.x, self.y)
-        self.dirc = "right"
+        self.body = [Vector2(5,10), Vector2(6,10),Vector2(7,10)]
+        self.dirc = Vector2(1,0)
         
     def spawn_snake(self):
-            snake_rect = pygame.Rect(self.pos.x * CELL_SIZE, self.pos.y * CELL_SIZE, CELL_SIZE, CELL_SIZE)
-            pygame.draw.rect(surface, (0,255,0), snake_rect)
+        for block in self.body:
+            x_pos = int(block.x * CELL_SIZE)
+            y_pos = int(block.y * CELL_SIZE)
+            block_rect = pygame.Rect(x_pos, y_pos, CELL_SIZE,CELL_SIZE)
+            pygame.draw.rect(surface,(0,255,0),block_rect)
+        
             
     def move_snake(self):
-
-        
-        if self.dirc == "up":
-            if 0 <= self.pos.x + 0 <= 19 and 0 <= self.pos.y + -1 <= 19:
-                snake.pos += Vector2(0, -1)
-        elif self.dirc == "down":
-            if 0 <= self.pos.x + 0 <= 19 and 0 <= self.pos.y + 1 <= 19:
-                snake.pos += Vector2(0, 1)
-        elif self.dirc == "left":
-            if 0 <= self.pos.x + -1 <= 19 and 0 <= self.pos.y + 0 <= 19:
-                snake.pos += Vector2(-1, 0)
-        elif self.dirc == "right":
-            if 0 <= self.pos.x + 1 <= 19 and 0 <= self.pos.y + 0 <= 19:
-                snake.pos += Vector2(1, 0)
+        body_copy = self.body[:-1]
+        body_copy.insert(0,body_copy[0] + self.dirc)
+        self.body = body_copy[:]
+        # if self.dirc == "up":
+        #     if 0 <= self.pos.x + 0 <= 19 and 0 <= self.pos.y + -1 <= 19:
+        #         snake.pos += Vector2(0, -1)
+        #         self.body_x, self.body_y = 0, -1
+        # elif self.dirc == "down":
+        #     if 0 <= self.pos.x + 0 <= 19 and 0 <= self.pos.y + 1 <= 19:
+        #         snake.pos += Vector2(0, 1)
+        #         self.body_x, self.body_y = 0, 1
+        # elif self.dirc == "left":
+        #     if 0 <= self.pos.x + -1 <= 19 and 0 <= self.pos.y + 0 <= 19:
+        #         snake.pos += Vector2(-1, 0)
+        #         self.body_x, self.body_y = -1, 0
+        # elif self.dirc == "right":
+        #     if 0 <= self.pos.x + 1 <= 19 and 0 <= self.pos.y + 0 <= 19:
+        #         snake.pos += Vector2(1, 0)
+        #         self.body_x, self.body_y = 1, 0
         
         
     
@@ -75,16 +82,16 @@ while on:
             print("key")
             if e.key == pygame.K_w:
                 print("trying to go up")
-                snake.dirc = "up"  
+                snake.dirc.x, snake.dirc.y = 0, -1  
             if e.key == pygame.K_s:
                 print("trying to go down")
-                snake.dirc = "down"
+                snake.dirc.x, snake.dirc.y = 0, 1
             if e.key == pygame.K_a:
                 print("trying to go left")
-                snake.dirc = "left" 
+                snake.dirc.x, snake.dirc.y = -1, 0
             if e.key == pygame.K_d:
                 print("trying to go right")
-                snake.dirc = "right"   
+                snake.dirc.x, snake.dirc.y = 1, 0 
     surface.fill(color)
     fruit.draw_fruit()
     snake.spawn_snake()
