@@ -1,26 +1,22 @@
-import pygame, sys, random, time
+import pygame, sys, random
 from pygame.math import Vector2
 
-
 pygame.init()
-
-
-
 color = (0,0,0)
 clock = pygame.time.Clock()
 (CELL_SIZE, CELL_QTY) = (40, 20)
 surface = pygame.display.set_mode((CELL_SIZE * CELL_QTY, CELL_SIZE * CELL_QTY))
-
-
 on = True
 class FRUIT:
     def __init__(self):
-        self.x = random.randint(0, 19)
-        self.y = random.randint(0, 19)
+        self.eaten()
+    
+    def eaten(self):
+        self.x, self.y = random.randint(0, 19), random.randint(0, 19)
         self.pos = Vector2(self.x, self.y)
 
     def draw_fruit(self):
-        fruit_rect = pygame.Rect(self.pos.x * CELL_SIZE, self.pos.y * CELL_SIZE, CELL_SIZE, CELL_SIZE)
+        fruit_rect = pygame.Rect(self.x * CELL_SIZE, self.y * CELL_SIZE, CELL_SIZE, CELL_SIZE)
         pygame.draw.rect(surface, (255,0,0), fruit_rect)
 
 
@@ -38,9 +34,15 @@ class SNAKE:
         
             
     def move_snake(self):
+        if snake.body[0] == fruit.pos:
+            fruit.eaten()
+            fruit.draw_fruit()
+            print("yum")
         body_copy = self.body[:-1]
         body_copy.insert(0,body_copy[0] + self.dirc)
         self.body = body_copy[:]
+        
+            
         # if self.dirc == "up":
         #     if 0 <= self.pos.x + 0 <= 19 and 0 <= self.pos.y + -1 <= 19:
         #         snake.pos += Vector2(0, -1)
@@ -68,7 +70,6 @@ pygame.time.set_timer(SCREEN_UPDATE,150)
 
 pygame.display.set_caption("Python Snake")
 
-
 while on: 
     for e in pygame.event.get():
         
@@ -92,6 +93,7 @@ while on:
             if e.key == pygame.K_d:
                 print("trying to go right")
                 snake.dirc.x, snake.dirc.y = 1, 0 
+
     surface.fill(color)
     fruit.draw_fruit()
     snake.spawn_snake()
