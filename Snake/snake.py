@@ -31,12 +31,18 @@ class SNAKE:
             y_pos = int(block.y * CELL_SIZE)
             block_rect = pygame.Rect(x_pos, y_pos, CELL_SIZE,CELL_SIZE)
             pygame.draw.rect(surface,(0,255,0),block_rect)
+    
+    def eat(self):
+        #self.body[:].insert(0,self.body[0] + self.dirc)
+        body_copy = self.body[:]
+        body_copy.insert(0,body_copy[0] + self.dirc)
+        self.body = body_copy[:]
         
             
     def move_snake(self):
         if snake.body[0] == fruit.pos:
             fruit.eaten()
-            fruit.draw_fruit()
+            self.eat()
             print("yum")
         body_copy = self.body[:-1]
         body_copy.insert(0,body_copy[0] + self.dirc)
