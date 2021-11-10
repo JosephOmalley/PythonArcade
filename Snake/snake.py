@@ -1,12 +1,16 @@
+
 import pygame, sys, random
 from pygame.math import Vector2
 
 pygame.init()
+gamerunning = True
 color = (0,0,0)
 clock = pygame.time.Clock()
 (CELL_SIZE, CELL_QTY) = (40, 20)
 surface = pygame.display.set_mode((CELL_SIZE * CELL_QTY, CELL_SIZE * CELL_QTY))
 on = True
+font = pygame.font.SysFont(None, 100)
+text_surface = font.render('Game Over', True, pygame.Color("red"))
 class FRUIT:
     def __init__(self):
         self.eaten()
@@ -23,7 +27,8 @@ class FRUIT:
 class SNAKE:
     def __init__(self):
         self.body = [Vector2(5,10), Vector2(6,10),Vector2(7,10)]
-        self.dirc = Vector2(1,0)
+        self.dirc = Vector2(-1,0)
+        self.alive = True
         
     def spawn_snake(self):
         for block in self.body:
@@ -33,13 +38,23 @@ class SNAKE:
             pygame.draw.rect(surface,(0,255,0),block_rect)
     
     def eat(self):
-        #self.body[:].insert(0,self.body[0] + self.dirc)
         body_copy = self.body[:]
         body_copy.insert(0,body_copy[0] + self.dirc)
         self.body = body_copy[:]
         
             
     def move_snake(self):
+        print(self.body[0].y)
+        for i in self.body[1:]:
+            if i == self.body[0]:
+                self.alive = False
+                print("snake died")
+                
+                # now print the text
+        if not 0 <= self.body[0].y <= 19.0 or not 0 <= self.body[0].x <= 19.0:
+            self.alive = False
+                
+                
         if snake.body[0] == fruit.pos:
             fruit.eaten()
             self.eat()
@@ -88,21 +103,28 @@ while on:
         if e.type == pygame.KEYDOWN:
             print("key")
             if e.key == pygame.K_w:
-                print("trying to go up")
-                snake.dirc.x, snake.dirc.y = 0, -1  
+                if snake.dirc.y != 1: 
+                    print("tryng to go up")
+                    snake.dirc.x, snake.dirc.y = 0, -1  
             if e.key == pygame.K_s:
-                print("trying to go down")
-                snake.dirc.x, snake.dirc.y = 0, 1
+                if snake.dirc.y != -1: 
+                    print("trying to go down")
+                    snake.dirc.x, snake.dirc.y = 0, 1
             if e.key == pygame.K_a:
-                print("trying to go left")
-                snake.dirc.x, snake.dirc.y = -1, 0
+                if snake.dirc.x != 1: 
+                    print("trying to go left")
+                    snake.dirc.x, snake.dirc.y = -1, 0
             if e.key == pygame.K_d:
                 print("trying to go right")
-                snake.dirc.x, snake.dirc.y = 1, 0 
-
+                if snake.dirc.x != -1: 
+                    snake.dirc.x, snake.dirc.y = 1, 0 
+    
     surface.fill(color)
-    fruit.draw_fruit()
-    snake.spawn_snake()
+    if snake.alive:
+        fruit.draw_fruit()
+        snake.spawn_snake()
+    else:
+        surface.blit(text_surface, [CELL_SIZE * 6, CELL_SIZE * 9])
     pygame.display.flip()
     clock.tick(60)
 
