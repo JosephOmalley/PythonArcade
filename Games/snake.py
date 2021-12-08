@@ -109,7 +109,6 @@ def start_snake():
                     print("enter ")
                     button_that_starts_game_has_been_pressed = True
                      
-        
         surface.fill(color)
         if snake.alive:
             fruit.draw_fruit()
@@ -139,5 +138,5 @@ def start_snake():
         clock.tick(60)
 
 
-    import main
+
 
